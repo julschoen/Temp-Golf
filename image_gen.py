@@ -20,10 +20,10 @@ class Generator(nn.Module):
     self.blocks = []
     for index in range(len(self.arch['out_channels'])):
      
-    self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
-                         out_channels=self.arch['out_channels'][index],
-                         upsample=(functools.partial(F.interpolate, scale_factor=2)
-                                   if self.arch['upsample'][index] else None))]]
+      self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
+                           out_channels=self.arch['out_channels'][index],
+                           upsample=(functools.partial(F.interpolate, scale_factor=2)
+                                     if self.arch['upsample'][index] else None))]]
       if self.p.att:
         if self.arch['attention'][self.arch['resolution'][index]]:
           self.blocks[-1] += [Attention(self.arch['out_channels'][index])]
