@@ -19,17 +19,11 @@ class Generator(nn.Module):
     self.linear = snlinear(self.p.z_size, self.arch['in_channels'][0] * (4**2))
     self.blocks = []
     for index in range(len(self.arch['out_channels'])):
-      if self.p.biggan_deep:
-        self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
-                               out_channels=self.arch['in_channels'][index] if g_index==0 else self.arch['out_channels'][index],
-                               upsample=(functools.partial(F.interpolate, scale_factor=2)
-                                         if self.arch['upsample'][index] and g_index == 1 else None))]
-                         for g_index in range(2)]
-      else:
-        self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
-                             out_channels=self.arch['out_channels'][index],
-                             upsample=(functools.partial(F.interpolate, scale_factor=2)
-                                       if self.arch['upsample'][index] else None))]]
+     
+    self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
+                         out_channels=self.arch['out_channels'][index],
+                         upsample=(functools.partial(F.interpolate, scale_factor=2)
+                                   if self.arch['upsample'][index] else None))]]
       if self.p.att:
         if self.arch['attention'][self.arch['resolution'][index]]:
           self.blocks[-1] += [Attention(self.arch['out_channels'][index])]
