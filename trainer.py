@@ -237,7 +237,7 @@ class Trainer(object):
         with autocast():
             z = torch.randn(real.shape[0], self.p.z_size, dtype=torch.float, device=self.device)
             fake = self.imG(z)
-            print(fake.shape, real.shape)
+
             disc_fake = self.imD(fake)
             disc_real = self.imD(real.unsqueeze(1))
         errD_real = (nn.ReLU()(1.0 - disc_real)).mean()
