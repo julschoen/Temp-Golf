@@ -13,7 +13,7 @@ class Discriminator(nn.Module):
                'out_channels' : [item * self.p.filterD for item in [2, 4, 8, 16, 16]],
                'downsample' : [True] * 5 + [False],
                'resolution' : [64, 32, 16, 8, 4, 4],
-               'attention' : {2**i: 2**i in [int(item) for item in '16'.split('_')]
+               'attention' : {2**i: 2**i in [int(item) for item in '64'.split('_')]
                               for i in range(2,8)}}
     
     # Prepare model
@@ -25,7 +25,7 @@ class Discriminator(nn.Module):
                        out_channels=self.arch['out_channels'][index],
                        preactivation=True,
                        downsample=(nn.AvgPool2d(2) if self.arch['downsample'][index] and d_index==0 else None))
-                       for d_index in range(1)]]
+                       for d_index in range(2)]]
       if self.p.att:
         if self.arch['attention'][self.arch['resolution'][index]]:
           self.blocks[-1] += [Attention(self.arch['out_channels'][index])]

@@ -9,6 +9,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.autograd import Variable, grad
 from torch.cuda.amp import autocast, GradScaler
+from ignite.metrics import FID
 
 import torchvision
 import torchvision.utils as vutils

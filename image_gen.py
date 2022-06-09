@@ -15,16 +15,17 @@ class Generator(nn.Module):
              'out_channels' : [item * self.p.filterG for item in [16, 8, 4,  2, 1]],
              'upsample' : [True] * 5,
              'resolution' : [8, 16, 32, 64, 128],
-             'attention' : {2**i: (2**i in [int(item) for item in '32'.split('_')]) for i in range(3,8)}}
+             'attention' : {2**i: (2**i in [int(item) for item in '64'.split('_')]) for i in range(3,8)}}
 
     self.linear = snlinear(self.p.z_size, self.arch['in_channels'][0] * (4**2))
     self.blocks = []
     for index in range(len(self.arch['out_channels'])):
      
       self.blocks += [[GBlock(in_channels=self.arch['in_channels'][index],
-                           out_channels=self.arch['out_channels'][index],
-                           upsample=(functools.partial(F.interpolate, scale_factor=2)
-                                     if self.arch['upsample'][index] else None))]]
+                               out_channels=self.arch['in_channels'][index] if g_index==0 else self.arch['out_channels'][index],
+                               upsample=(functools.partial(F.interpolate, scale_factor=2)
+                                         if self.arch['upsample'][index] and g_index == 1 else None))]
+                         for g_index in range(2)]
       if self.p.att:
         if self.arch['attention'][self.arch['resolution'][index]]:
           self.blocks[-1] += [Attention(self.arch['out_channels'][index])]
